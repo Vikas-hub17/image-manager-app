@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import bcrypt
-from db import get_db
+from .db import get_db
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -18,10 +18,10 @@ def signup():
     db = get_db()
     cursor = db.cursor()
     cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", 
-                   (username, hashed_password))
+                   (username, hashed_password.decode('utf-8')))
     db.commit()
 
-    return jsonify({"message": "User created successfully"})
+    return jsonify({"message": "User registered successfully"})
 
 @auth_bp.route('/login', methods=['POST'])
 def login():

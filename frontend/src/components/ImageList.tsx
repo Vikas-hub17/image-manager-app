@@ -1,69 +1,59 @@
-import styled from 'styled-components'
+import React, { useEffect, useState } from 'react';
+import { getImages, ImageData } from '../api/imageApi';
+import { Container, ImageContainer, ImageItem, Message, PaginationButton } from '../styles/ImageStyles';
 
-interface Image {
-  id: number
-  file_name: string
-  s3_key: string
-  upload_date: string
-}
+const ImageList: React.FC = () => {
+    const [images, setImages] = useState<ImageData[]>([]);
+    const [message, setMessage] = useState<string>('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
-interface ImageListProps {
-  images: Image[]
-}
+    useEffect(() => {
+        const fetchImages = async () => {
+            try {
+                const response = await getImages(currentPage);
+                setImages(response.images);
+                setTotalPages(response.totalPages);
+            } catch (error) {
+                setMessage('Failed to load images.');
+            }
+        };
 
-const ListTitle = styled.h2`
-  text-align: center;
-  margin-top: 2rem;
-`;
+        fetchImages();
+    }, [currentPage]);
 
-const ListContainer = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2rem;
-  list-style: none;
-  padding: 0;
-  margin-top: 2rem;
-`;
+    const handleNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
 
-const ListItem = styled.li`
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
+    const handlePrevPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
 
-const ImageTag = styled.img`
-  display: block;
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-`;
+    return (
+        <Container>
+            <h2>Uploaded Images</h2>
+            {message && <Message>{message}</Message>}
+            <ImageContainer>
+                {images.map((image, index) => (
+                    <ImageItem key={index}>
+                        <img src={image.url} alt="Uploaded" />
+                        <p>{image.description || 'No description available'}</p>
+                    </ImageItem>
+                ))}
+            </ImageContainer>
 
-const ImageName = styled.p`
-  padding: 1rem;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 500;
-`;
+            <div>
+                <PaginationButton onClick={handlePrevPage} disabled={currentPage === 1}>
+                    Previous
+                </PaginationButton>
+                <span>Page {currentPage} of {totalPages}</span>
+                <PaginationButton onClick={handleNextPage} disabled={currentPage === totalPages}>
+                    Next
+                </PaginationButton>
+            </div>
+        </Container>
+    );
+};
 
-const ImageList = ({ images }: ImageListProps) => {
-  return (
-    <div>
-      <ListTitle>Your Images</ListTitle>
-      <ListContainer>
-        {images.map(image => (
-          <ListItem key={image.id}>
-            <ImageTag src={`https://your-s3-bucket-url/${image.s3_key}`} alt={image.file_name} />
-            <ImageName>{image.file_name}</ImageName>
-          </ListItem>
-        ))}
-      </ListContainer>
-    </div>
-  )
-}
-
-export default ImageList
+export default ImageList;

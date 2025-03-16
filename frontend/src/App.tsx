@@ -1,33 +1,21 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AuthPage from './pages/AuthPage';
+import DashboardPage from './pages/DashboardPage';
+import { GlobalStyles } from './styles/GlobalStyles';
 
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import styled from 'styled-components'
+const App: React.FC = () => (
+    <>
+        <GlobalStyles />
+        <Router>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+            </Routes>
+        </Router>
+    </>
+);
 
-const AppContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #ecf0f1;
-`;
-
-function App() {
-  const isAuthenticated = !!localStorage.getItem('token')
-  return (
-    <AppContainer>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-        />
-      </Routes>
-    </AppContainer>
-  )
-}
-
-export default App
+export default App;

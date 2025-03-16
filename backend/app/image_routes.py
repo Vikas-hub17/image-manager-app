@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
-from cloudflare_utils import upload_image, get_image_url
+from .cloudflare_utils import upload_image, list_images
 
 image_bp = Blueprint('image_bp', __name__)
 
 @image_bp.route('/upload', methods=['POST'])
 def upload():
-    """Upload Image Endpoint"""
     file = request.files.get('image')
     if not file:
         return jsonify({"error": "No file uploaded"}), 400
@@ -18,7 +17,7 @@ def upload():
         "url": image_url
     })
 
-@image_bp.route('/image/<file_name>', methods=['GET'])
-def get_image(file_name):
-    """Retrieve Image URL Endpoint"""
-    return jsonify({"url": get_image_url(file_name)})
+@image_bp.route('/list', methods=['GET'])
+def list_all():
+    images = list_images()
+    return jsonify({"images": images})

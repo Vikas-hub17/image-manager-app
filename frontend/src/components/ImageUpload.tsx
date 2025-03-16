@@ -1,77 +1,44 @@
-import React, { useState } from 'react'
-import api from '../services/api'
-import styled from 'styled-components'
+import React, { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { uploadImage } from '../api/imageApi';
+import { Container, DragDropArea, Button, Message } from '../styles/ImageStyles';
 
-const UploadContainer = styled.div`
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  text-align: center;
-  margin: 2rem auto;
-  max-width: 400px;
-`;
+const ImageUpload: React.FC = () => {
+    const [file, setFile] = useState<File | null>(null);
+    const [message, setMessage] = useState<string>('');
 
-const Title = styled.h2`
-  margin-bottom: 1.5rem;
-`;
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => setFile(acceptedFiles[0]),
+    });
 
-const FileInput = styled.input`
-  margin-bottom: 1rem;
-`;
+    const handleUpload = async () => {
+        if (!file) return setMessage('Please select an image to upload.');
 
-const Button = styled.button`
-  background-color: #18BC9C;
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  &:hover {
-    background-color: #F39C12;
-    transform: translateY(-2px);
-  }
-`;
+        const formData = new FormData();
+        formData.append('image', file);
 
-interface ImageUploadProps {
-  onUpload: () => void
-}
-
-const ImageUpload = ({ onUpload }: ImageUploadProps) => {
-  const [file, setFile] = useState<File | null>(null)
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0])
-    }
-  }
-
-  const handleUpload = async () => {
-    if (!file) return
-    const formData = new FormData()
-    formData.append('file', file)
-    try {
-      await api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+        try {
+            const response = await uploadImage(formData);
+            setMessage(`Image uploaded successfully! URL: ${response.data.url}`);
+        } catch (error) {
+            setMessage('Image upload failed. Try again.');
         }
-      })
-      onUpload()
-    } catch (error) {
-      console.error('Upload failed', error)
-    }
-  }
+    };
 
-  return (
-    <UploadContainer>
-      <Title>Upload Image</Title>
-      <FileInput type="file" onChange={handleFileChange} />
-      <Button onClick={handleUpload}>Upload</Button>
-    </UploadContainer>
-  )
-}
+    return (
+        <Container>
+            <h2>Upload Image</h2>
 
-export default ImageUpload
+            <DragDropArea {...getRootProps()}>
+                <input {...getInputProps()} />
+                {file ? <p>{file.name}</p> : <p>Drag & drop an image here or click to select one</p>}
+            </DragDropArea>
+
+            <Button onClick={handleUpload}>Upload Image</Button>
+            {message && <Message>{message}</Message>}
+        </Container>
+    );
+};
+
+export default ImageUpload;

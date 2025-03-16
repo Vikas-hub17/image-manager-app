@@ -7,9 +7,9 @@ ACCESS_KEY = os.getenv('CLOUDFLARE_ACCESS_KEY')
 SECRET_KEY = os.getenv('CLOUDFLARE_SECRET_KEY')
 ACCOUNT_ID = os.getenv('CLOUDFLARE_ACCOUNT_ID')
 BUCKET_NAME = os.getenv('CLOUDFLARE_BUCKET_NAME')
-REGION = os.getenv('CLOUDFLARE_REGION')
+REGION = os.getenv('CLOUDFLARE_REGION', 'auto')
 
-# Initialize S3 Client for Cloudflare R2
+# Initialize Cloudflare R2 Client
 s3_client = boto3.client(
     's3',
     endpoint_url=f'https://{ACCOUNT_ID}.r2.cloudflarestorage.com',
@@ -24,6 +24,7 @@ def upload_image(file, file_name):
     s3_client.upload_fileobj(file, BUCKET_NAME, file_name)
     return f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com/{BUCKET_NAME}/{file_name}"
 
-def get_image_url(file_name):
-    """Generate public URL for an image in Cloudflare R2"""
-    return f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com/{BUCKET_NAME}/{file_name}"
+def list_images():
+    """List all uploaded images in the Cloudflare R2 bucket"""
+    objects = s3_client.list_objects_v2(Bucket=BUCKET_NAME)
+    return [obj['Key'] for obj in objects.get('Contents', [])]
