@@ -1,4 +1,4 @@
-📷 Image Manager Web Application
+## 📷 Image Manager Web Application
 A secure web application that allows users to upload and manage images with optional AI-based image analysis using the ChatGPT API.
 
 🚀 Project Overview
@@ -120,14 +120,6 @@ Frontend
 ```bash
 npm run dev
 ```
-
-🔌 API Endpoints
-Endpoint	Method	Description
-/auth/register	POST	Register a new user
-/auth/login	POST	Log in to an existing account
-/images/upload	POST	Upload an image to Cloudflare
-/images/list?page=1	GET	List uploaded images (with pagination)
-/auth/send-verification-email	POST	Send email verification link
 
 🔐 Security Features
 ✅ Enforced HTTPS for secure communication.
