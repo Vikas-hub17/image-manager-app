@@ -94,17 +94,19 @@ Step 3: Environment Variables Configuration
 Create a .env file in both /backend and /frontend with the following keys:
 
 Backend .env
-
+```bash
 POSTGRES_URI=your_postgres_connection_string
 JWT_SECRET=your_jwt_secret
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
 CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_email_password
+```
 
 Frontend .env
-
+```bash
 VITE_API_BASE_URL=http://localhost:5000
+```
 
 Step 4: Run the Application
 Backend
