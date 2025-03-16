@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Navbar from '../components/Navbar';
 
 const Container = styled.div`
     display: flex;
@@ -32,6 +33,7 @@ const LinkButton = styled(Link)`
 const HomePage: React.FC = () => {
     return (
         <Container>
+                <Navbar />
             <Title>Welcome to Image Manager</Title>
             <LinkButton to="/auth">Login / Register</LinkButton>
         </Container>
