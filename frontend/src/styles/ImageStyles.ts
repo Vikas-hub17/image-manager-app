@@ -82,3 +82,16 @@ export const DragDropArea = styled.div`
         background-color: #eaf5ea;
     }
 `;
+
+export const Button = styled.button`
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #45a049;
+    }
+`;

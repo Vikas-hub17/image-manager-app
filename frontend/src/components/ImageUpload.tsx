@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, Accept } from 'react-dropzone';
 import { uploadImage } from '../api/imageApi';
-import { Container, DragDropArea, Button, Message } from '../styles/ImageStyles';
+import { Button, Container, DragDropArea, Message } from '../styles/ImageStyles';
 
 const ImageUpload: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
     const [message, setMessage] = useState<string>('');
 
+    const accept: Accept = {
+        'image/*': ['.png', '.jpeg', '.jpg', '.webp']
+    };
+
     const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
+        accept,
         onDrop: (acceptedFiles) => setFile(acceptedFiles[0]),
     });
 
