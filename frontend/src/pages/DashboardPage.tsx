@@ -1,60 +1,64 @@
-import { useEffect, useState } from 'react'
-import ImageUpload from '../components/ImageUpload'
-import ImageList from '../components/ImageList'
-import api from '../services/api'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
-const DashboardContainer = styled.div`
-  width: 90%;
-  max-width: 1200px;
-  margin: 2rem auto;
+const Container = styled.div`
+    padding: 20px;
+    text-align: center;
 `;
 
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 2rem;
+const Title = styled.h1`
+    color: ${({ theme }) => theme.colors.primary};
 `;
 
-const Dashboard = () => {
-  const [images, setImages] = useState<any[]>([])
-  const navigate = useNavigate()
+const ImageList = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: ${({ theme }) => theme.spacing.medium};
+`;
 
-  const fetchImages = async () => {
-    try {
-      const response = await api.get('/images', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
-      setImages(response.data.images)
-    } catch (error) {
-      console.error('Failed to fetch images', error)
+const ImageItem = styled.img`
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+`;
+
+const Button = styled.button`
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: ${({ theme }) => theme.spacing.medium};
+
+    &:hover {
+        background-color: #45a049;
     }
-  }
+`;
 
-  useEffect(() => {
-    fetchImages()
-  }, [])
+const DashboardPage: React.FC = () => {
+    const sampleImages = [
+        'https://via.placeholder.com/150',
+        'https://via.placeholder.com/200',
+        'https://via.placeholder.com/250'
+    ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-  }
+    return (
+        <Container>
+            <Title>Your Image Dashboard</Title>
 
-  return (
-    <DashboardContainer>
-      <Header>
-        <h1>Dashboard</h1>
-        <button onClick={handleLogout}>Logout</button>
-      </Header>
-      <ImageUpload onUpload={fetchImages} />
-      <ImageList images={images} />
-    </DashboardContainer>
-  )
-}
+            <ImageList>
+                {sampleImages.map((img, idx) => (
+                    <ImageItem key={idx} src={img} alt={`Image ${idx + 1}`} />
+                ))}
+            </ImageList>
 
-export default Dashboard
+            <Button>Upload New Image</Button>
+        </Container>
+    );
+};
+
+export default DashboardPage;

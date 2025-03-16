@@ -95,3 +95,39 @@ export const Button = styled.button`
         background-color: #45a049;
     }
 `;
+
+export const UploadButton = styled.button`
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #45a049;
+    }
+`;
+
+export const ImageCard = styled.div`
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    text-align: center;
+
+    img {
+        width: 100%;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+`;
+
+export const ImageDescription = styled.p`
+    background-color: #e3f2fd;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: #1565c0;
+    text-align: center;
+    font-size: 14px;
+`;

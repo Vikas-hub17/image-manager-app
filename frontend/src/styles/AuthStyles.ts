@@ -1,38 +1,63 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const AuthContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
 `;
 
-export const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+export const FormWrapper = styled.div`
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+`;
+
+export const Title = styled.h1`
+    text-align: center;
+    color: #4CAF50;
+`;
+
+export const LinkText = styled.p`
+    text-align: center;
+    color: #4CAF50;
+    cursor: pointer;
+    margin-top: 15px;
+
+    &:hover {
+        text-decoration: underline;
+    }
 `;
 
 export const Input = styled.input`
+    width: 100%;
     padding: 10px;
-    border: 2px solid #4CAF50;
-    border-radius: 5px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 `;
 
 export const Button = styled.button`
-    background-color: #4CAF50;
-    color: #ffffff;
+    width: 100%;
     padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    margin-top: 10px;
 
     &:hover {
         background-color: #45a049;
     }
 `;
 
-export const Message = styled.p`
+export const ErrorText = styled.p`
     color: red;
-    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
 `;

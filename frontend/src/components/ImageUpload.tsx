@@ -1,47 +1,45 @@
 import React, { useState } from 'react';
-import { useDropzone, Accept } from 'react-dropzone';
-import { uploadImage } from '../api/imageApi';
-import { Button, Container, DragDropArea, Message } from '../styles/ImageStyles';
+import { uploadImage } from '../services/api';
+import { ImageContainer, UploadButton, ImageDescription } from '../styles/ImageStyles';
 
-const ImageUpload: React.FC = () => {
+interface ImageUploadProps {
+    token: string;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({ token }) => {
     const [file, setFile] = useState<File | null>(null);
-    const [message, setMessage] = useState<string>('');
+    const [description, setDescription] = useState<string | null>(null);
 
-    const accept: Accept = {
-        'image/*': ['.png', '.jpeg', '.jpg', '.webp']
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
     };
 
-    const { getRootProps, getInputProps } = useDropzone({
-        accept,
-        onDrop: (acceptedFiles) => setFile(acceptedFiles[0]),
-    });
-
     const handleUpload = async () => {
-        if (!file) return setMessage('Please select an image to upload.');
-
-        const formData = new FormData();
-        formData.append('image', file);
-
+        if (!file) return alert("Please select a file first.");
+        
         try {
-            const response = await uploadImage(formData);
-            setMessage(`Image uploaded successfully! URL: ${response.data.url}`);
+            const data = await uploadImage(file, token);
+            setDescription(data.description);  // Show AI-generated description
+            alert("Image uploaded successfully!");
         } catch (error) {
-            setMessage('Image upload failed. Try again.');
+            console.error("Upload error:", error);
+            alert("Failed to upload image.");
         }
     };
 
     return (
-        <Container>
-            <h2>Upload Image</h2>
+        <ImageContainer>
+            <input type="file" onChange={handleFileChange} />
+            <UploadButton onClick={handleUpload}>Upload Image</UploadButton>
 
-            <DragDropArea {...getRootProps()}>
-                <input {...getInputProps()} />
-                {file ? <p>{file.name}</p> : <p>Drag & drop an image here or click to select one</p>}
-            </DragDropArea>
-
-            <Button onClick={handleUpload}>Upload Image</Button>
-            {message && <Message>{message}</Message>}
-        </Container>
+            {description && (
+                <ImageDescription>
+                    <strong>AI Description:</strong> {description}
+                </ImageDescription>
+            )}
+        </ImageContainer>
     );
 };
 

@@ -1,24 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-interface AuthData {
-    username: string;
-    password: string;
-}
-
-export const signup = async (userData: AuthData) => {
-    return await axios.post(`${API_BASE_URL}/auth/signup`, userData);
+export const registerUser = async (userData: { username: string; email: string; password: string }) => {
+    return await axios.post(`${API_BASE_URL}/auth/register`, userData);
 };
 
-export const login = async (userData: AuthData) => {
+export const loginUser = async (userData: { email: string; password: string }) => {
     return await axios.post(`${API_BASE_URL}/auth/login`, userData);
-};
-
-export const logout = async () => {
-    return await axios.post(`${API_BASE_URL}/auth/logout`);
-};
-
-export const sendVerificationEmail = async (email: string) => {
-    return await axios.post(`${API_BASE_URL}/auth/send-verification-email`, { email });
 };

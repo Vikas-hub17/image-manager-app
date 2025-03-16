@@ -1,7 +1,8 @@
 Flask
-flask-cors
+flask-restful
 flask-sqlalchemy
-psycopg2-binary
 boto3
-flask-jwt-extended
-flask-bcrypt
+bcrypt
+jwt
+openai
+python-dotenv
