@@ -1,8 +1,7 @@
-Flask
-flask-restful
+flask
 flask-sqlalchemy
-boto3
-bcrypt
-jwt
-openai
+flask-jwt-extended
+psycopg2-binary
 python-dotenv
+cloudflare
+flask-limiter

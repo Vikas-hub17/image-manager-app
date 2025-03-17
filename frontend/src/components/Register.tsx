@@ -1,46 +1,148 @@
-import React from 'react';
-import styled from 'styled-components';
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-`;
-
-const Input = styled.input`
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 100%;
-`;
-
-const Button = styled.button`
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #45a049;
-    }
-`;
+// /components/Register.tsx
+import React, { useState } from "react";
+import {
+  Container,
+  Form,
+  Input,
+  Button,
+  LinkText,
+  ErrorText,
+  SuccessText,
+  PasswordWrapper,
+  StrengthIndicator,
+} from "../styles/AuthStyles";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register: React.FC = () => {
-    const handleRegister = (e: React.FormEvent) => {
-        e.preventDefault();
-        alert('Registration Successful!');
-    };
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [passwordStrength, setPasswordStrength] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-    return (
-        <Form onSubmit={handleRegister}>
-            <Input type="text" placeholder="Name" required />
-            <Input type="email" placeholder="Email" required />
-            <Input type="password" placeholder="Password" required />
-            <Button type="submit">Register</Button>
-        </Form>
-    );
+  // Email Validation Regex
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // Password Strength Checker
+  const checkPasswordStrength = (password: string) => {
+    if (password.length < 6) return "Weak";
+    if (/^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+      return "Strong";
+    }
+    return "Medium";
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordStrength(checkPasswordStrength(value));
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null); 
+    setSuccess(null); 
+
+    if (!name || !email || !password || !confirmPassword) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      setSuccess("Registration successful! Redirecting...");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } catch {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Container>
+      <Form onSubmit={handleRegister}>
+        <h2>Register</h2>
+
+        {error && <ErrorText>{error}</ErrorText>}
+        {success && <SuccessText>{success}</SuccessText>}
+
+        <Input
+          type="text"
+          placeholder="Full Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <PasswordWrapper>
+          <Input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            required
+          />
+          <span onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </PasswordWrapper>
+
+        {password && (
+          <StrengthIndicator strength={passwordStrength}>
+            Password Strength: {passwordStrength}
+          </StrengthIndicator>
+        )}
+
+        <Input
+          type={showPassword ? "text" : "password"}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </Button>
+
+        <LinkText>
+          Already have an account? <a href="/login">Login here</a>
+        </LinkText>
+      </Form>
+    </Container>
+  );
 };
 
 export default Register;
