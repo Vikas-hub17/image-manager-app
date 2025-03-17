@@ -3,8 +3,8 @@ from flask_jwt_extended import JWTManager
 from app.config import db, SECRET_KEY
 from app.routes import routes
 from app.error_handler import register_error_handlers
-from app.logger import setup_logger
-from app.rate_limiter import configure_rate_limiter
+from app.logger import setup_logger  # Removed rate limiter import
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -17,7 +17,6 @@ def create_app():
 
     register_error_handlers(app)
     setup_logger()
-    configure_rate_limiter(app)
 
     app.register_blueprint(routes)
 

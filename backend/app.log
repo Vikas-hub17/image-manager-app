@@ -1,0 +1,20 @@
+[2025-03-17 12:04:07] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2025-03-17 12:04:07] INFO - [33mPress CTRL+C to quit[0m
+[2025-03-17 12:04:07] INFO -  * Restarting with stat
+[2025-03-17 12:04:08] WARNING -  * Debugger is active!
+[2025-03-17 12:04:08] INFO -  * Debugger PIN: 112-367-973
+[2025-03-17 12:07:42] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2025-03-17 12:07:42] INFO - [33mPress CTRL+C to quit[0m
+[2025-03-17 12:07:42] INFO -  * Restarting with stat
+[2025-03-17 12:07:43] WARNING -  * Debugger is active!
+[2025-03-17 12:07:43] INFO -  * Debugger PIN: 112-367-973
+[2025-03-17 12:08:33] INFO -  * Detected change in 'C:\\Users\\vikas\\OneDrive\\Desktop\\image-manager-app\\image-manager-app\\backend\\app\\__init__.py', reloading
+[2025-03-17 12:08:33] INFO -  * Restarting with stat
+[2025-03-17 12:08:58] INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2025-03-17 12:08:58] INFO - [33mPress CTRL+C to quit[0m
+[2025-03-17 12:08:58] INFO -  * Restarting with stat
+[2025-03-17 12:08:59] WARNING -  * Debugger is active!
+[2025-03-17 12:08:59] INFO -  * Debugger PIN: 112-367-973
