@@ -18,12 +18,13 @@ const AppRoutes: React.FC = () => {
   useEffect(() => {
     monitorTokenExpiry();
   }, []);
+
   const location = useLocation();
 
   return (
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Protected Routes */}
@@ -39,17 +40,29 @@ const AppRoutes: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  useEffect(() => {
+    document.body.className = isDarkMode ? "dark" : "light";
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+  };
 
   return (
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <GlobalStyles />
-        <Toaster position="top-right" reverseOrder={false} />
-        <Router>
-          <DarkModeToggle toggleTheme={() => setIsDarkMode(!isDarkMode)} />
-          <AppRoutes />
-        </Router>
-      </ThemeProvider>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <GlobalStyles />
+      <Toaster position="top-right" reverseOrder={false} />
+      <Router>
+        <DarkModeToggle toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+        <AppRoutes />
+      </Router>
+    </ThemeProvider>
   );
 };
 

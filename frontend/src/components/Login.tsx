@@ -1,26 +1,25 @@
 // /components/Login.tsx
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Container,
   Form,
   Input,
   Button,
   LinkText,
-  ErrorText,
-  SuccessText,
   PasswordWrapper,
   StrengthIndicator,
   CheckboxWrapper,
 } from "../styles/AuthStyles";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [passwordStrength, setPasswordStrength] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
@@ -43,39 +42,42 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); 
-    setSuccess(null); 
 
     if (!email || !password) {
-      setError("All fields are required.");
+      toast.error("All fields are required.");
       return;
     }
 
     if (!isValidEmail(email)) {
-      setError("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      toast.error("Password must be at least 6 characters long.");
       return;
     }
 
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await axios.post("/auth/login", {
+        email,
+        password,
+        rememberMe,
+      });
 
-      if (email === "test@example.com" && password === "password123") {
-        setSuccess("Login successful! Redirecting...");
+      if (response.data.message) {
+        toast.success(response.data.message);
         setTimeout(() => {
           window.location.href = "/dashboard";
         }, 2000);
       } else {
-        setError("Invalid email or password.");
+        toast.error("Invalid email or password.");
       }
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || "An unexpected error occurred. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -85,9 +87,6 @@ const Login: React.FC = () => {
     <Container>
       <Form onSubmit={handleLogin}>
         <h2>Login</h2>
-
-        {error && <ErrorText>{error}</ErrorText>}
-        {success && <SuccessText>{success}</SuccessText>}
 
         <Input
           type="email"

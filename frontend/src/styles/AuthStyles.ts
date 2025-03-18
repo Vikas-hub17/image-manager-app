@@ -1,98 +1,50 @@
 // /styles/AuthStyles.ts
 import styled from "styled-components";
 
+// Main Container for Forms
 export const Container = styled.div`
   display: flex;
   height: 100vh;
-  align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.background};
-  padding: 1rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 2rem;
-  }
+  align-items: center;
+  background-color: #f9f9f9;
 `;
 
+// Form Styling
 export const Form = styled.form`
   background: #ffffff;
-  padding: 3rem 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
   width: 100%;
   max-width: 400px;
-  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
   h2 {
+    text-align: center;
     margin-bottom: 1.5rem;
-    color: ${({ theme }) => theme.primary};
+    color: #333;
   }
 `;
 
+// Input Field Styling
 export const Input = styled.input`
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 2px solid #ddd;
   border-radius: 8px;
-  outline: none;
-  transition: border 0.3s ease-in-out;
+  font-size: 16px;
+  transition: border-color 0.3s;
 
   &:focus {
-    border-color: ${({ theme }) => theme.primary};
-    box-shadow: 0 0 5px ${({ theme }) => theme.primary};
-  }
-
-  &::placeholder {
-    color: #aaa;
+    border-color: #4caf50;
+    outline: none;
   }
 `;
 
-export const Button = styled.button`
-  width: 100%;
-  background: ${({ theme }) => theme.primary};
-  color: #fff;
-  padding: 12px 0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.secondary};
-    transform: scale(1.05);
-  }
-
-  &:disabled {
-    background-color: #bbb;
-    cursor: not-allowed;
-    transform: none;
-  }
-`;
-
-export const ErrorText = styled.p`
-  background-color: #ffebeb;
-  color: #d32f2f;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-`;
-
-export const SuccessText = styled.p`
-  background-color: #e7fbe7;
-  color: #388e3c;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-`;
-
+// Password Field Wrapper
 export const PasswordWrapper = styled.div`
   position: relative;
-
-  input {
-    padding-right: 40px;
-  }
 
   span {
     position: absolute;
@@ -100,49 +52,87 @@ export const PasswordWrapper = styled.div`
     right: 12px;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #666;
+    color: #4caf50;
   }
 `;
 
-export const StrengthIndicator = styled.p<{ strength: string }>`
-  margin-top: -0.5rem;
-  text-align: left;
-  font-size: 0.875rem;
-  color: ${({ strength }) =>
-    strength === "Weak"
-      ? "#d32f2f"
-      : strength === "Medium"
-      ? "#f57c00"
-      : "#388e3c"};
+// Button Styling
+export const Button = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 1rem;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  &:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
 `;
 
+// Error & Success Messages
+export const ErrorText = styled.p`
+  color: #f44336;
+  background-color: #ffe6e6;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
+export const SuccessText = styled.p`
+  color: #4caf50;
+  background-color: #e8f5e9;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
+// Password Strength Indicator
+export const StrengthIndicator = styled.p<{ strength: string }>`
+  color: ${({ strength }) =>
+    strength === "Weak"
+      ? "#f44336"
+      : strength === "Medium"
+      ? "#ff9800"
+      : "#4caf50"};
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 1rem;
+`;
+
+// Checkbox Wrapper
 export const CheckboxWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-align: left;
-  margin-top: 1rem;
+  gap: 8px;
+  margin-bottom: 1rem;
 
   label {
-    color: #666;
-    font-size: 0.875rem;
+    font-size: 14px;
+    color: #333;
   }
 `;
 
-export const Heading = styled.h2`
-  color: ${({ theme }) => theme.primary};
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-`;
-
-export const LinkText = styled.p`
+// Link Text
+export const LinkText = styled.div`
+  text-align: center;
   margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #666;
 
   a {
-    color: ${({ theme }) => theme.primary};
+    color: #4caf50;
     text-decoration: none;
+    font-weight: bold;
 
     &:hover {
       text-decoration: underline;
