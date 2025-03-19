@@ -12,8 +12,10 @@ import {
   StrengthIndicator,
 } from "../styles/AuthStyles";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -42,46 +44,57 @@ const Register: React.FC = () => {
   };
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null); 
-    setSuccess(null); 
+      e.preventDefault();
+      setError(null); 
+      setSuccess(null); 
+    
+      if (!name || !email || !password || !confirmPassword) {
+        setError("All fields are required.");
+        return;
+      }
+  
+      if (!isValidEmail(email)) {
+        setError("Please enter a valid email address.");
+        return;
+      }
+  
+      if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+  
+      setLoading(true);
+  
+      try {
+        const response = await fetch("http://localhost:5000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: name,
+                email,
+                password
+            })
+        });
 
-    if (!name || !email || !password || !confirmPassword) {
-      setError("All fields are required.");
-      return;
+        const data = await response.json(); // Attempt to parse JSON response
+
+        if (!response.ok) {
+            console.error("Server error:", data); // Log the full response
+            throw new Error(data.error || "Registration failed.");
+        }
+
+        sessionStorage.setItem("prefillEmail", email);
+        sessionStorage.setItem("prefillPassword", password);
+
+        setSuccess("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate("/"), 2000);
+
+    } catch (err: any) {
+        console.error("Registration error:", err);
+        setError(err.message || "An unexpected error occurred. Please check the console.");
     }
-
-    if (!isValidEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      setSuccess("Registration successful! Redirecting...");
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
-    } catch {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+}; 
+  
   return (
     <Container>
       <Form onSubmit={handleRegister}>
@@ -138,7 +151,7 @@ const Register: React.FC = () => {
         </Button>
 
         <LinkText>
-          Already have an account? <a href="/login">Login here</a>
+          Already have an account? <a href="/">Login here</a>
         </LinkText>
       </Form>
     </Container>

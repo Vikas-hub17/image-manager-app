@@ -7,18 +7,19 @@ import {
   InfoText,
   Button,
 } from "../styles/DashboardStyles";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard: React.FC = () => {
+
+const Dashboard: React.FC = () => {const navigate = useNavigate(); // Add this
   const user = {
     name: "John Doe",
     email: "john.doe@example.com",
   };
 
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to log out?")) {
-      window.location.href = "/";
-    }
-  };
+    localStorage.removeItem("authToken");  // Clear the token
+    navigate("/");  // Redirect to login page
+  };  
 
   return (
     <Container>

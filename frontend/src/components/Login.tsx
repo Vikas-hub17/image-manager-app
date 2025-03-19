@@ -1,6 +1,5 @@
 // /components/Login.tsx
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Form,
@@ -23,6 +22,18 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("prefillEmail");
+    const storedPassword = sessionStorage.getItem("prefillPassword");
+  
+    if (storedEmail) setEmail(storedEmail);
+    if (storedPassword) setPassword(storedPassword);
+  
+    // Clear session storage after auto-filling
+    sessionStorage.removeItem("prefillEmail");
+    sessionStorage.removeItem("prefillPassword");
+  }, []);  
+
   // Email Validation Regex
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -44,44 +55,46 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error("All fields are required.");
-      return;
+        toast.error("All fields are required.");
+        return;
     }
 
     if (!isValidEmail(email)) {
-      toast.error("Please enter a valid email address.");
-      return;
+        toast.error("Please enter a valid email address.");
+        return;
     }
 
     if (password.length < 6) {
-      toast.error("Password must be at least 6 characters long.");
-      return;
+        toast.error("Password must be at least 6 characters long.");
+        return;
     }
 
     setLoading(true);
 
     try {
-      const response = await axios.post("/auth/login", {
-        email,
-        password,
-        rememberMe,
-      });
+        const response = await fetch('http://localhost:5000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }) // Correct structure
+        });
 
-      if (response.data.message) {
-        toast.success(response.data.message);
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 2000);
-      } else {
-        toast.error("Invalid email or password.");
-      }
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.error || "An unexpected error occurred. Please try again.";
-      toast.error(errorMessage);
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Login successful:', data);
+            toast.success("Login successful!");
+        } else {
+            toast.error(data.error || "Login failed. Please try again.");
+        }
+    } catch (err) {
+        console.error('Error during login:', err);
+        toast.error("Network error. Please try again later.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <Container>

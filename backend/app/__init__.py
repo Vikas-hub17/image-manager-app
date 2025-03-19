@@ -1,28 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
-import os
-
-# Load environment variables
-load_dotenv()
+from flask_cors import CORS  # Import CORS
 
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
     
-    # Correctly set DATABASE URL
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-    
-    if not app.config['SQLALCHEMY_DATABASE_URI']:
-        raise RuntimeError("DATABASE_URL is not set. Check your .env file.")
-
+    # Database Configuration
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://vikas:admin@localhost:5432/image_management'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
 
-    # Import blueprints inside the function to avoid circular imports
+    # Enable CORS for all routes
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+
+    # Register blueprints
     from app.routes.auth import auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(auth_bp)
 
     return app
