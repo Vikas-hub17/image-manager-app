@@ -4,6 +4,14 @@ from flask_cors import CORS  # Import CORS
 
 db = SQLAlchemy()
 
+@app.route("/")
+def home():
+    return "Welcome to the Image Management App!"
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    return {"message": "Login endpoint is working!"}
+
 def create_app():
     app = Flask(__name__)
     
